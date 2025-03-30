@@ -4,6 +4,8 @@ pipeline {
         // ระบุ path ของไฟล์ docker-compose.yml
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
         COMPOSE_BAKE = 'true'
+        ROBOT_TESTS_DIR = "./Robot/script"
+        ROBOT_RESULTS_DIR = "./Robot/result"
     }
 
     stages {
@@ -60,6 +62,35 @@ pipeline {
                         export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
                         docker-compose -f $DOCKER_COMPOSE_FILE up -d
                     """
+                }
+            }
+        }
+        stage('Robot Test') {
+            steps {
+                script {
+                    echo "Running Robot Framework tests..."
+                    sh 'mkdir -p ${ROBOT_RESULTS_DIR}'
+                    
+                    sh """
+                        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+                        docker run --rm \
+                            -v ${pwd()}/${ROBOT_TESTS_DIR}:/tests \
+                            -v ${pwd()}/${ROBOT_RESULTS_DIR}:/results \
+                            --network=host \
+                            --name robot-tests \
+                            ppodgorsek/robot-framework:latest \
+                            --outputdir /results
+                    """
+                }
+            }
+            post {
+                always {
+                    // จัดเก็บผลการทดสอบเป็น artifacts
+                    archiveArtifacts artifacts: "${ROBOT_RESULTS_DIR}/**/*", fingerprint: true
+                    
+                    robot outputPath: "${ROBOT_RESULTS_DIR}", 
+                          passThreshold: 80.0, 
+                          unstableThreshold: 60.0
                 }
             }
         }
