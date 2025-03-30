@@ -4,8 +4,8 @@ pipeline {
         // ระบุ path ของไฟล์ docker-compose.yml
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
         COMPOSE_BAKE = 'true'
-        ROBOT_TESTS_DIR = "/Robot/script"
-        ROBOT_RESULTS_DIR = "/Robot/result"
+        ROBOT_TESTS_DIR = "Robot/script"
+        ROBOT_RESULTS_DIR = "Robot/result"
     }
 
     stages {
@@ -80,11 +80,9 @@ pipeline {
             steps {
                 script {
                     echo "Running Robot Framework tests..."
-                    sh 'mkdir -p ${ROBOT_RESULTS_DIR}'
-                    
                     // รัน Robot Framework โดยตรงบนเครื่อง Jenkins
                     sh """
-                        /opt/anaconda3/bin/robot --outputdir ${ROBOT_RESULTS_DIR} ${ROBOT_TESTS_DIR}
+                        /opt/anaconda3/bin/robot --outputdir ${pwd()}/Robot/result ${pwd()}/Robot/script
                     """
                 }
             }
