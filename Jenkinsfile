@@ -4,8 +4,8 @@ pipeline {
         // ระบุ path ของไฟล์ docker-compose.yml
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
         COMPOSE_BAKE = 'true'
-        ROBOT_TESTS_DIR = "./Robot/script"
-        ROBOT_RESULTS_DIR = "./Robot/result"
+        ROBOT_TESTS_DIR = "/Robot/script"
+        ROBOT_RESULTS_DIR = "/Robot/result"
     }
 
     stages {
