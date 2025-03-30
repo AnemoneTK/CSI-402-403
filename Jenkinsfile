@@ -71,15 +71,9 @@ pipeline {
                     echo "Running Robot Framework tests..."
                     sh 'mkdir -p ${ROBOT_RESULTS_DIR}'
                     
+                    // รัน Robot Framework โดยตรงบนเครื่อง Jenkins
                     sh """
-                        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-                        docker run --rm \
-                            -v ${pwd()}/${ROBOT_TESTS_DIR}:/tests \
-                            -v ${pwd()}/${ROBOT_RESULTS_DIR}:/results \
-                            --network=host \
-                            --name robot-tests \
-                            ppodgorsek/robot-framework:latest \
-                            --outputdir /results
+                        /opt/anaconda3/bin/robot --outputdir ${ROBOT_RESULTS_DIR} ${ROBOT_TESTS_DIR}
                     """
                 }
             }
@@ -89,8 +83,8 @@ pipeline {
                     archiveArtifacts artifacts: "${ROBOT_RESULTS_DIR}/**/*", fingerprint: true
                     
                     robot outputPath: "${ROBOT_RESULTS_DIR}", 
-                          passThreshold: 80.0, 
-                          unstableThreshold: 60.0
+                        passThreshold: 80.0, 
+                        unstableThreshold: 60.0
                 }
             }
         }
