@@ -39,6 +39,17 @@ pipeline {
             }
         }
 
+        stage('Clean Docker') {
+            steps {
+                script {
+                    sh """
+                        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+                        docker system prune -af --volumes
+                    """
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
