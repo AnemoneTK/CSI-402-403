@@ -3,6 +3,7 @@ pipeline {
     environment {
         // ระบุ path ของไฟล์ docker-compose.yml
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
+        COMPOSE_BAKE = 'true'
     }
 
     stages {
