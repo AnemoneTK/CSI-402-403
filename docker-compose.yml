@@ -26,18 +26,6 @@ services:
 
   client:
     build:
-      context: ./csi402forNextAuth-main
-    working_dir: /app
-    volumes:
-      - ./csi402forNextAuth-main:/src
-    ports:
-      - "35100:35100"
-    command: yarn dev
-    depends_on:
-      - server
-
-  csi403:
-    build:
       context: ./CSI402/learning-project
     working_dir: /app
     volumes:
